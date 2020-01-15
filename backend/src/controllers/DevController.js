@@ -28,7 +28,8 @@ module.exports = {
 
       const { name = login, avatar_url, bio } = response.data;
 
-      const techsArray = parseStringAsArray(techs);
+      // no need to parse as array
+      //   const techsArray = parseStringAsArray(techs);
 
       const location = { type: "Point", coordinates: [longitude, latitude] };
 
@@ -37,7 +38,7 @@ module.exports = {
         github_username,
         avatar_url,
         bio,
-        techs: techsArray,
+        techs: techs.trim(),
         location
       };
 

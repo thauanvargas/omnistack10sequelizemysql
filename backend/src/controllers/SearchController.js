@@ -9,36 +9,7 @@ module.exports = {
   async index(req, res) {
     const { latitude, longitude, techs } = req.query;
 
-    // const techsArray = parseStringAsArray(techs);
-
-    // const location = sequelize.literal(
-    //   `ST_GeomFromText('POINT(${longitude} ${latitude})', 4326)`
-    // );
-
-    // const devs = Dev.findAll({
-    //   limit: 15,
-    //   attributes: [
-    //     [
-    //       sequelize.fn(
-    //         "ST_Distance_Sphere",
-    //         sequelize.literal("location"),
-    //         location
-    //       ),
-    //       "distance"
-    //     ]
-    //   ],
-    //   where: {
-    //     techs: {
-    //       [Op.like]: `%${techs}%`
-    //     }
-    //   }
-    // }).catch(err => {
-    //   res.status(404).writeHead({
-    //     message:
-    //       err.message ||
-    //       `Não foi encontrado nenhum Dev com a Tech '${techs.trim()}' .`
-    //   });
-    // });
+    const techsArray = parseStringAsArray(techs);
 
     const location = sequelize.literal(
       `ST_GeomFromText('POINT(${longitude} ${latitude})')`
@@ -51,7 +22,23 @@ module.exports = {
 
     const devs = await Dev.findAll({
       order: distance,
-      where: sequelize.where(distance, { [Op.lte]: 10000 }),
+      where: {
+        [Op.and]: [
+          sequelize.where(distance, {
+            [Op.lte]: 10000
+            // [Op.and]: [sequelize.where({ techs: { [Op.like]: techsArray } })]
+          }),
+          { techs: { [Op.like]: "%" + techs + "%" } }
+          //   {
+          //     [Op.and]:
+          //   }
+        ]
+      },
+
+      //   sequelize.where(distance, {
+      //     [Op.lte]: 10000
+      //     // [Op.and]: [sequelize.where({ techs: { [Op.like]: techsArray } })]
+      //   }),
       limit: 10,
       logging: console.log
     });
