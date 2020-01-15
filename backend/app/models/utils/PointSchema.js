@@ -1,0 +1,5 @@
+/*
+
+Not needed since Sequelize already has a Geometry Point Type.
+
+*/
