@@ -28,6 +28,12 @@ export default function App() {
     setDevs([...devs, response.data]);
   }
 
+  async function handleEditDev(data) {
+    const response = await api.update(`/devs/${data.github_username}`, data);
+
+    setDevs([...devs, response.data]);
+  }
+
   return (
     <div id="app">
       <aside>
@@ -37,7 +43,11 @@ export default function App() {
       <main>
         <ul>
           {devs.map(dev => (
-            <DevItem key={dev.github_username} dev={dev} />
+            <DevItem
+              onSubmit={handleEditDev}
+              key={dev.github_username}
+              dev={dev}
+            />
           ))}
         </ul>
       </main>

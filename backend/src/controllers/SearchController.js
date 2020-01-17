@@ -9,7 +9,7 @@ module.exports = {
   async index(req, res) {
     const { latitude, longitude, techs } = req.query;
 
-    const techsArray = parseStringAsArray(techs);
+    // const techsArray = parseStringAsArray(techs);
 
     const location = sequelize.literal(
       `ST_GeomFromText('POINT(${longitude} ${latitude})')`
@@ -42,6 +42,8 @@ module.exports = {
       limit: 10,
       logging: console.log
     });
+
+    console.log(devs);
 
     return res.json(devs);
   }

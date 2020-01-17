@@ -44,7 +44,7 @@ module.exports = {
 
       await Dev.create(developer)
         .then(data => {
-          console.table(`Dev Created - ${data.github_username}`);
+          console.log(`Dev Created - ${data.github_username}`);
         })
         .catch(err => {
           res.status(500).send({
@@ -52,7 +52,52 @@ module.exports = {
           });
         });
     }
-
     return res.json(developer);
+  },
+
+  async destroy(req, res) {
+    const { github_username } = req.params;
+
+    // console.log(github_username);
+
+    await Dev.destroy({
+      where: {
+        github_username: github_username
+      }
+    })
+      .then(data => {
+        console.log(`DEV DELETED - ${github_username}`);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: err.message || "Ocorreu um erro apagando o Dev."
+        });
+      });
+
+    return res.json({ dev: "Apagou" });
+  },
+
+  async update(req, res) {
+    //name, avatar, bio, a localização e as tecnologias
+
+    const { github_username } = req.params;
+
+    let { name, avatar_url, bio, latitude, longitude } = req.body;
+
+    latitude ? (latitude = parseFloat(latitude)) : null;
+    longitude ? (latitude = parseFloat(longitude)) : null;
+
+    await Dev.update(
+      { name, avatar_url, bio, latitude, longitude },
+      {
+        where: {
+          github_username
+        }
+      }
+    ).then(data => {
+      console.log(`DEV ALTERADO - ${data.github_username}`);
+    });
+
+    return res.json({ dev: "Alterou" });
   }
 };
