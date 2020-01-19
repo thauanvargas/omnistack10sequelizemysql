@@ -60,6 +60,11 @@ Para testar a API do Dev Maps, baixe e instala o [Insomnia](https://insomnia.res
 
 <img align="center" src="./static/insomnia.png"></img>
 
+## TODO
+
+- Fix Update and Delete on Backend
+- Make Buttons to Edit Dev / Delete
+
 ## Licença
 
 [MIT](./LICENSE) &copy; [Rocketseat](https://rocketseat.com.br/)
