@@ -16,10 +16,26 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 
 import api from "../services/api";
+import socket, {
+  connect,
+  disconnect,
+  subscribeToNewDevs
+} from "../services/socket";
+import { YellowBox } from "react-native";
+
+console.ignoredYellowBox = ["Remote debugger"];
+YellowBox.ignoreWarnings([
+  "Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?"
+]);
 
 function Main({ navigation }) {
   const [devs, setDevs] = useState([]);
   const [currentRegion, setCurrentRegion] = useState(null);
+  const [techs, setTechs] = useState("");
+
+  useEffect(() => {
+    subscribeToNewDevs(dev => setDevs([...devs, dev]));
+  }, [devs]);
 
   useEffect(() => {
     async function loadInitialLocation() {
@@ -42,6 +58,14 @@ function Main({ navigation }) {
     loadInitialLocation();
   }, []);
 
+  function setupWebSocket() {
+    disconnect();
+
+    const { latitude, longitude } = currentRegion;
+
+    connect(latitude, longitude, techs);
+  }
+
   async function loadDevs() {
     const {
       latitude = latitude.toString(),
@@ -50,13 +74,14 @@ function Main({ navigation }) {
 
     const response = await api.get("/search", {
       params: {
-        latitude: latitude,
-        longitude: longitude,
-        techs: "React"
+        latitude,
+        longitude,
+        techs
       }
     });
 
     setDevs(response.data);
+    setupWebSocket();
   }
 
   function handleRegionChanged(region) {
@@ -79,8 +104,8 @@ function Main({ navigation }) {
           <Marker
             key={dev.id}
             coordinate={{
-              longitude: dev.location.coordinates[0],
-              latitude: dev.location.coordinates[1]
+              longitude: parseFloat(dev.location.coordinates[0]),
+              latitude: parseFloat(dev.location.coordinates[1])
             }}
           >
             <Image
@@ -107,6 +132,8 @@ function Main({ navigation }) {
       </MapView>
       <KeyboardAvoidingView style={styles.searchForm}>
         <TextInput
+          value={techs}
+          onChangeText={setTechs}
           style={styles.searchInput}
           placeholder="Buscar devs por techs..."
           placeholderTextColor="#999"

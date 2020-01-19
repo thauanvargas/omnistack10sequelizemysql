@@ -3,6 +3,7 @@ const db = require("../../app/models");
 const Dev = db.dev;
 const parseStringAsArray = require("../utils/parseStringAsArray");
 const Op = db.sequelize.Op;
+const { findConnections, sendMessage } = require("../websocket");
 
 module.exports = {
   async index(req, res) {
@@ -51,6 +52,18 @@ module.exports = {
             message: err.message || "Ocorreu um erro a criar o Dev."
           });
         });
+
+      /* Filter Connections which are at a max distance of 10km 
+        and the new Dev has at least one of the techs */
+
+      const sendSocketMessageTo = findConnections(
+        { latitude: latitude.toString(), longitude: longitude.toString() },
+        techs
+      );
+
+      sendMessage(sendSocketMessageTo, "new-dev", developer);
+
+      console.log(sendSocketMessageTo);
     }
     return res.json(developer);
   },

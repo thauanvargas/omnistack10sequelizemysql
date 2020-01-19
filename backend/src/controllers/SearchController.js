@@ -43,7 +43,7 @@ module.exports = {
       logging: console.log
     });
 
-    console.log(devs);
+    //console.log(devs);
 
     return res.json(devs);
   }
