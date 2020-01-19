@@ -56,8 +56,6 @@ Assim que o processo terminar, automaticamente será aberta no seu navegador a p
 
 Para testar a API do Dev Maps, baixe e instala o [Insomnia](https://insomnia.rest/download/) e faz import do meu arquivo em `./OmniStack Insomnia Requests` podes ver como fazer import através da Aba Import/Export quando clicas na Workspace.
 
-<img align="center" src="./static/insomnia.png"></img>
-
 ## TODO
 
 - Fix Update and Delete on Backend
