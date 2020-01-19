@@ -1,5 +1,5 @@
 <h1 align="center">Semana Omnistack 10.0</h1>
-<p align="center">Projeto <strong>Dev Map (DevRadar)</strong> desenvolvido durante a Omnistack da Rocketseat</p>
+<p align="center">Projeto <strong>Dev Map (DevRadar)</strong> desenvolvido durante a Omnistack da Rocketseat só que com MySQL e Sequelize ORM</p>
 
 <p align="center">
   <a aria-label="Completo" href="https://rocketseat.com.br/week-10/aulas#4">
